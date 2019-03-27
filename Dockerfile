@@ -19,8 +19,8 @@ ENV PATH ${PATH}:${SBT_PATH}/bin
 RUN apk add --no-cache --update bash wget && mkdir -p "${SBT_PATH}" && \
     wget -qO - ${SBT_URL} | tar xz -C ${SBT_PATH} --strip-components=1 && \
     mkdir -p ${SBT_IVY_CACHE} && mkdir -p /usr/local/etc && \
-    echo "-J-Dsbt.boot.directory=${SBT_IVY_CACHE}/sbt" > /usr/local/etc/sbtopts && \
-    echo "-J-Dsbt.ivy.home=${SBT_IVY_CACHE}/ivy" >> /usr/local/etc/sbtopts
+    echo "-sbt-boot ${SBT_IVY_CACHE}/sbt" >> /usr/local/sbt/conf/sbtopts && \
+    echo "-ivy ${SBT_IVY_CACHE}/ivy" >> /usr/local/sbt/conf/sbtopts
 RUN sbt exit
 
 
@@ -35,3 +35,4 @@ COPY --from=verilator_build /usr/local/share/man/man1/verilator* /usr/local/shar
 ENV PATH ${PATH}:/usr/local/sbt/bin
 COPY --from=sbt_build ${SBT_IVY_CACHE} ${SBT_IVY_CACHE}
 COPY --from=sbt_build /usr/local/sbt /usr/local/sbt
+COPY --from=sbt_build /usr/local/sbt/conf/sbtopts /usr/local/sbt/conf/sbtopts
