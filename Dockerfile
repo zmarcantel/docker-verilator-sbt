@@ -27,9 +27,10 @@ RUN sbt exit
 
 FROM openjdk:8-jre-alpine
 
-RUN apk --no-cache add bash
+RUN apk add --no-cache perl make g++ bash
 
 COPY --from=verilator_build /usr/local/bin/verilator* /usr/local/bin/
+COPY --from=verilator_build /usr/local/share/verilator /usr/local/share/verilator
 COPY --from=verilator_build /usr/local/share/man/man1/verilator* /usr/local/share/man/man1/
 
 ENV PATH ${PATH}:/usr/local/sbt/bin
